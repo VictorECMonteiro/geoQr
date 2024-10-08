@@ -22,7 +22,11 @@ export default function HomePage({navigation}){
 
         return(
             <View>
-                <Button title='Navegar' onPress={()=>{navigation.dispatch(CommonActions.reset({index:0,routes:[{name:'QR'}]}))}}></Button>
+                <Button title='Navegar' onPress={()=>{
+                    navigation.dispatch(CommonActions.reset({index:0,routes:[{name:'QR'}]}))
+                    AsyncStorage.setItem("teste","valorteste")
+                    
+                    }}></Button>
             </View>
         )
     

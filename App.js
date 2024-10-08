@@ -27,10 +27,13 @@ function App(){
         }}>
           <Stack.Screen
             name="Home"
-            component={LoginComponent}/>
+            component={HomePage}/>
           <Stack.Screen
             name="QR"
             component={QrScan}/>
+            <Stack.Screen
+            name="Login"
+            component={LoginComponent}/>
         </Stack.Navigator>
       </NavigationContainer>
 

@@ -5,24 +5,40 @@ import {
     StyleSheet,
     Text,
     View,
-    Pressable
+    Pressable,
+
   } from 'react-native';
   import React, { useState } from 'react';
   import { Camera, useCameraDevice, useCodeScanner } from 'react-native-vision-camera';
   import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+  import {createNativeStackNavigator} from '@react-navigation/native-stack';
+  import Geolocation from '@react-native-community/geolocation';
+  import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const Stack = createNativeStackNavigator();
+
+  const Stack = createNativeStackNavigator();
+
   function QrScan(){
     const [valueqr, setValueqr] = useState("");
     const device = useCameraDevice("back");
+    const localVisto = AsyncStorage.getItem("locaisVistos")
+    const teste = AsyncStorage.getItem("teste")
   
     const codeScanner = useCodeScanner({
       codeTypes: ['qr', 'ean-13'],
-      onCodeScanned: (codes) => {
+      onCodeScanned: async (codes) => {
         for (const code of codes) {
-          console.log(code.value)
+          // console.log(code.value)
           setValueqr(code.value);
+          await AsyncStorage.setItem("locaisVistos", JSON.stringify({valueqr: valueqr, emRonda:true}))
+          Geolocation.getCurrentPosition((position)=>{
+            console.log(position.coords.latitude)
+            
+          })
+          
+          console.log(localVisto)
+          console.log(teste)
+          
         }
       }
     });

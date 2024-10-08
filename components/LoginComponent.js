@@ -7,7 +7,8 @@ import {
     View,
     Pressable,
     Button,
-    TextInput
+    TextInput,
+    AsyncStorage
   } from 'react-native';
   import React, { useState } from 'react';
   import { CommonActions, NavigationContainer } from '@react-navigation/native';
@@ -16,28 +17,45 @@ import {
 const Stack = createNativeStackNavigator();
 
 
-export default function LoginComponent(){
+export default function LoginComponent({navigation}){
     const [userName, setUserName] = useState("")
     const [passWord, setPassword] = useState("")
+    const [dadosResposta, setDadosResposta] = useState(true)
 
-
+    navegar = ()=> {
+        navigation.dispatch(CommonActions.reset({index:0,routes:[{name:'Home'}]}))
+    }
 
 
     loginRequest = async()=>{
-        await axios.post('http://192.168.65.177:9010/login/loginHandle', {
+        await axios.post('http://192.168.9.247:9011/login/loginHandle', {
             userName: userName,
             passWord: passWord
         }).then((response)=>{
-            console.log(response.data)
+            if(!response.data || response.data.success == false){
+                
+                setDadosResposta(false)
+                return false
+            }
+            else{
+                try{
+                    AsyncStorage.setItem("loginData", JSON.stringify(response.data))
+                }
+                catch(e){
+        
+                }
+                return true
+            }
 
         }).catch((e)=>{
-            console.log(e)
+            console.log(e)  
         })
+    
     }
 
     return(
         <View style={styleLogin.view}>
-            <Text style={styleLogin.pageLabel}>Fazer Login</Text>
+            <Text style={styleLogin.pageLabel}>{dadosResposta?"Fazer Login":"Usuario ou senha incorretos"}</Text>
             <View style={styleLogin.viewLogin}>
                 <Text style={styleLogin.label}>Nome de usuário</Text>
                 <TextInput
@@ -50,15 +68,11 @@ export default function LoginComponent(){
                     onChangeText={text=>setPassword(text)}
                     secureTextEntry={true}
                 />
-                <Button title='Entrar' onPress={loginRequest}></Button>
+                <Button title='Entrar' onPress={loginRequest?navegar:""}></Button>
             </View>
         </View>
 
     )
-
-
-
-
 }
 
 const styleLogin = StyleSheet.create({
