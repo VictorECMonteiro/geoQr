@@ -7,12 +7,12 @@ import {
     View,
     Pressable,
     Button,
-    TextInput,
-    AsyncStorage
+    TextInput
   } from 'react-native';
   import React, { useState } from 'react';
   import { CommonActions, NavigationContainer } from '@react-navigation/native';
   import { createNativeStackNavigator } from '@react-navigation/native-stack';
+  import AsyncStorage from '@react-native-async-storage/async-storage';
   const axios = require('axios').default;
 const Stack = createNativeStackNavigator();
 
@@ -22,35 +22,28 @@ export default function LoginComponent({navigation}){
     const [passWord, setPassword] = useState("")
     const [dadosResposta, setDadosResposta] = useState(true)
 
-    navegar = ()=> {
-        navigation.dispatch(CommonActions.reset({index:0,routes:[{name:'Home'}]}))
+    navegar = async () => {
+
     }
-
-
     loginRequest = async()=>{
         await axios.post('http://192.168.9.247:9011/login/loginHandle', {
             userName: userName,
             passWord: passWord
-        }).then((response)=>{
+        }).then(async (response)=>{
+            console.log(response.data)
             if(!response.data || response.data.success == false){
                 
                 setDadosResposta(false)
                 return false
             }
-            else{
-                try{
-                    AsyncStorage.setItem("loginData", JSON.stringify(response.data))
-                }
-                catch(e){
-        
-                }
-                return true
-            }
+            await AsyncStorage.setItem("loginData", JSON.stringify(response.data))
 
         }).catch((e)=>{
             console.log(e)  
         })
-    
+        const teste = await AsyncStorage.getItem('loginData')
+        console.log(teste)
+        navigation.dispatch(CommonActions.reset({index:0,routes:[{name:'Home'}]}))
     }
 
     return(
@@ -68,7 +61,7 @@ export default function LoginComponent({navigation}){
                     onChangeText={text=>setPassword(text)}
                     secureTextEntry={true}
                 />
-                <Button title='Entrar' onPress={loginRequest?navegar:""}></Button>
+                <Button title='Entrar' onPress={loginRequest}></Button>
             </View>
         </View>
 
