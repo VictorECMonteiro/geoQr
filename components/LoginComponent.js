@@ -7,7 +7,8 @@ import {
     View,
     Pressable,
     Button,
-    TextInput
+    TextInput,
+    TouchableOpacity
   } from 'react-native';
   import React, { useState } from 'react';
   import { CommonActions, NavigationContainer } from '@react-navigation/native';
@@ -32,18 +33,21 @@ export default function LoginComponent({navigation}){
         }).then(async (response)=>{
             console.log(response.data)
             if(!response.data || response.data.success == false){
-                
+                console.log("errou")    
                 setDadosResposta(false)
                 return false
             }
+
             await AsyncStorage.setItem("loginData", JSON.stringify(response.data))
+
+            console.log("Tudo ok")
+
+            navigation.dispatch(CommonActions.reset({index:0,routes:[{name:'Home'}]}))
 
         }).catch((e)=>{
             console.log(e)  
         })
-        const teste = await AsyncStorage.getItem('loginData')
-        console.log(teste)
-        navigation.dispatch(CommonActions.reset({index:0,routes:[{name:'Home'}]}))
+
     }
 
     return(
@@ -59,9 +63,9 @@ export default function LoginComponent({navigation}){
                 <TextInput
                     style={styleLogin.textinput}
                     onChangeText={text=>setPassword(text)}
-                    secureTextEntry={true}
-                />
-                <Button title='Entrar' onPress={loginRequest}></Button>
+                    secureTextEntry={true}/>
+                
+                <TouchableOpacity style={styleLogin.button}onPress={loginRequest}><Text>Entrar</Text></TouchableOpacity>
             </View>
         </View>
 
@@ -73,45 +77,61 @@ const styleLogin = StyleSheet.create({
         width:"100%",
         height:"100%",
         display: "flex",
-        alignItems:"center",
+        alignItems:"start",
         justifyContent:"center",
-        color: "#FFF"
+        color: "#FFF",
+        backgroundColor: "#292929",
+        
     },
     viewLogin:{
         width: "90%",
         height: "80%",
-        backgroundColor: "#d9d9d9",
         display: "flex",
         alignItems:"center",
         justifyContent:"center",
         borderRadius: 10,
+        margin: "auto",
     },
     textinput:{
         
         minWidth: "80%",
-        minHeight: "6%",
+        minHeight: "5%",
         padding:10,
         // backgroundColor: "#FFF",
-        color: "#292929",
+        color: "#fff",
         borderWidth:2,
         borderRadius:5,
-        borderColor: "blue",
+        borderColor: "#D9D9D9",
     },
     label:{
-        fontSize: 20,
+        fontSize: 13,
         marginBottom: 10,
         marginTop:10,
-        fontWeight: "900",
-        color: "#292929",
+        color: "#fff",
         alignSelf:"flex-start",
         marginLeft: 50
 
     },
     pageLabel:{
-        fontSize: 50,
-        marginBottom: 10,
+        backgroundColor:"blue",
+        minHeight:50,
+        marginTop: 100,
+        marginLeft: 50,
+        fontSize: 20,
+        textAlign: "left",
         fontWeight: "900",
-        color: "#292929"
+        color: "#FFF",
+        
+    },
+    button:{
+        alignItems:"center",
+        justifyContent: "center",
+        color: "#292929",
+        marginTop: 50,
+        backgroundColor: "#d9d9d9",
+        width: 200,
+        height: 40,
+        borderRadius: 20,
     }
 
 
