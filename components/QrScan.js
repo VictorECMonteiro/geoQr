@@ -53,7 +53,7 @@ function QrScan({navigation}) {
     } catch (e) {}
   }
 
-  const data = new Date().toISOString().split("T")[0];
+  
   const dataHoras = new Date()
 
 
@@ -70,6 +70,7 @@ function QrScan({navigation}) {
 
       for (i = 0; i <= 0; i++) {
         const valorQr = codes[0].value;
+        const data = new Date().toISOString().split("T")[0];
         setValueqr(valorQr);
         console.log(valorQr);
         await getLatitude();
