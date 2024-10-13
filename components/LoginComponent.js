@@ -27,7 +27,7 @@ export default function LoginComponent({navigation}){
 
     }
     loginRequest = async()=>{
-        await axios.post('http://192.168.9.247:9011/login/loginHandle', {
+        await axios.post('http://192.168.1.50:9011/login/loginHandle', {
             userName: userName,
             passWord: passWord
         }).then(async (response)=>{

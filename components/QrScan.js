@@ -78,7 +78,7 @@ function QrScan({navigation}) {
         
         await axios
           .post(
-            'http://192.168.9.247:9011/rondas/rondaDefine',
+            'http://192.168.1.50:9011/rondas/rondaDefine',
             {
               userName: userName,
               localNome: valueqr,
@@ -135,7 +135,7 @@ function QrScan({navigation}) {
           isActive={true}
         />
       </View>
-      <Pressable style={styles.button}>
+      <Pressable style={styles.button} onPress={()=>{navigation.navigate("Home")}}>
         <Text style={StyleSheet.create({color: '#292929'})}>Voltar</Text>
       </Pressable>
     </View>
